@@ -1,0 +1,12 @@
+{
+  "name": "finite-automata-simulator",
+  "version": "1.0.0",
+  "description": "A web-based simulator for deterministic and non-deterministic finite automata.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

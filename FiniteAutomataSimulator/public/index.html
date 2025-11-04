@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATC Assignment</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://visjs.github.io/vis-network/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-100">
+
+    <div class="container mx-auto p-4">
+        <h1 class="text-3xl font-bold text-center mb-4">ATC Assignment</h1>
+        <h2 class="text-xl font-semibold text-center mb-8">V C Section</h2>
+        <h3 class="text-xl font-semibold text-center">Team Members:</h3>
+        <h4 class="text-xl font-semibold text-center mb-8">Akash Ram (4SF23CI020), Hithashruth Shetty (4SF23CI062), Muhammad Faazil (4SF23CI092)</h4>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+            <!-- Automata Definition -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-semibold mb-4">1. Define Automaton</h2>
+                <form id="automata-form">
+                    <div class="mb-4">
+                        <label for="states" class="block text-gray-700">States (comma-separated, e.g., q0,q1,q2)</label>
+                        <input type="text" id="states" class="w-full px-3 py-2 border rounded-lg" value="q0,q1,q2">
+                    </div>
+                    <div class="mb-4">
+                        <label for="alphabet" class="block text-gray-700">Alphabet (comma-separated, e.g., 0,1)</label>
+                        <input type="text" id="alphabet" class="w-full px-3 py-2 border rounded-lg" value="0,1">
+                    </div>
+                    <div class="mb-4">
+                        <label for="start-state" class="block text-gray-700">Start State</label>
+                        <input type="text" id="start-state" class="w-full px-3 py-2 border rounded-lg" value="q0">
+                    </div>
+                    <div class="mb-4">
+                        <label for="accept-states" class="block text-gray-700">Accept States (comma-separated)</label>
+                        <input type="text" id="accept-states" class="w-full px-3 py-2 border rounded-lg" value="q2">
+                    </div>
+                    <div class="mb-4">
+                        <h3 class="text-lg font-semibold">Transitions</h3>
+                        <p class="text-sm text-gray-500">Format: state,symbol=nextState. One per line. Use 'e' for epsilon.</p>
+                        <textarea id="transitions" class="w-full px-3 py-2 border rounded-lg" rows="5">q0,0=q0
+q0,1=q1
+q1,0=q0
+q1,1=q2
+q2,0=q2
+q2,1=q2</textarea>
+                    </div>
+                </form>
+                
+                <!-- Sample Automata -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Sample Automata:</label>
+                    <select id="sample-automata" class="w-full px-3 py-2 border rounded-lg">
+                        <option value="">Select a sample automaton...</option>
+                        <option value="dfa_ends_with_1">DFA - Ends with 1</option>
+                        <option value="dfa_even_zeros">DFA - Even number of 0s</option>
+                        <option value="nfa_contains_01">NFA - Contains '01'</option>
+                        <option value="nfa_epsilon">NFA with Epsilon</option>
+                        <option value="dfa_starts_with_1">DFA - Starts with 1</option>
+                        <option value="dfa_binary_divisible_by_3">DFA - Binary Divisible by 3</option>
+                        <option value="nfa_ends_with_ab">NFA - Ends with 'ab'</option>
+                        <option value="nfa_contains_abc">NFA - Contains 'abc'</option>
+                        <option value="nfa_epsilon_loop">NFA with Epsilon Loop</option>
+                        <option value="dfa_vowel_checker">DFA - Contains at least one vowel</option>                        
+                    </select>
+                </div>
+            </div>
+
+            <!-- Simulation and Visualization -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-semibold mb-4">2. Simulate & Visualize</h2>
+                
+                <!-- Error Display -->
+                <div id="error-display" class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg hidden"></div>
+                
+                <!-- Simulation -->
+                <div class="mb-4">
+                    <label for="input-string" class="block text-gray-700">Input String</label>
+                    <input type="text" id="input-string" class="w-full px-3 py-2 border rounded-lg" placeholder="e.g., 0101">
+                </div>
+                
+                <div class="flex gap-2 mb-4">
+                    <button id="simulate-button" class="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">Simulate</button>
+                    <button id="step-prev" class="px-4 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600" disabled>←</button>
+                    <button id="step-next" class="px-4 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600" disabled>→</button>
+                </div>
+                
+                <!-- Simulation Steps -->
+                <div id="simulation-steps" class="mb-4 p-3 bg-gray-50 rounded-lg max-h-32 overflow-y-auto hidden">
+                    <h4 class="font-semibold mb-2">Simulation Steps:</h4>
+                    <div id="steps-content"></div>
+                </div>
+                
+                <div id="result" class="mt-4 text-center text-2xl font-bold"></div>
+
+                <!-- Visualization -->
+                <div class="mt-4">
+                    <h3 class="text-lg font-semibold mb-2">Automaton Visualization</h3>
+                    <div id="visualization" class="border rounded-lg" style="height: 400px;"></div>
+                </div>
+                
+                <!-- Export/Import -->
+                <div class="mt-4 flex gap-2">
+                    <button id="export-btn" class="flex-1 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600">Export Automaton</button>
+                    <button id="import-btn" class="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">Import Automaton</button>
+                    <input type="file" id="import-file" class="hidden" accept=".json">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://visjs.github.io/vis-network/dist/vis-network.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
