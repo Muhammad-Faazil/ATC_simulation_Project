@@ -15,7 +15,7 @@ This project is a web-based simulator for deterministic (DFA) and non-determinis
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/your-username/FiniteAutomataSimulator.git
+    git clone https://github.com/Muhammad-Faazil/ATC_simulation_Project.git
     ```
 2.  **Navigate to the project directory:**
     ```bash
